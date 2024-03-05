@@ -3,7 +3,9 @@ doctrine_mongodb:
     auto_generate_hydrator_classes: true
     connections:
         default:
-            server: 'mongodb://%env(resolve:DB_USER)%:%env(resolve:DB_PASSWORD)%@%env(resolve:DB_HOST)%:%env(resolve:DB_PORT)%/%env(resolve:DB_NAME)%'
+            server: "%mongodb_server%"
+            options: {}
+    default_database: "%env(DB_NAME)%"
     document_managers:
         default:
             auto_mapping: true
