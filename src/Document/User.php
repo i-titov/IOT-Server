@@ -3,27 +3,39 @@
 namespace App\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-class User
+/**
+ * @MongoDB\MappedSuperclass
+ */
+class User implements UserInterface,PasswordAuthenticatedUserInterface
 {
-
     #[MongoDB\Id]
     protected ?string $id;
 
     #[MongoDB\Field(type: 'string')]
-    protected ?string $first_name = null;
+    #[Assert\NotBlank]
+    protected ?string $first_name;
+
+    #[Assert\NotBlank]
 
     #[MongoDB\Field(type: 'string')]
-    protected ?string $second_name = null;
+    protected ?string $second_name;
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    #[MongoDB\Field(type: 'string')]
+    protected ?string $email;
 
     #[MongoDB\Field(type: 'string')]
-    protected ?string $email = null;
-
-    #[MongoDB\Field(type: 'string')]
-    protected ?string $pwd = null;
+    #[Assert\NotBlank]
+    protected ?string $password;
 
     #[MongoDB\Field(type: 'string')]
     protected ?string $role = null;
+    #[MongoDB\Field(type: 'date')]
+    protected ?string $created_at = null;
 
     public function getId(): ?int
     {
@@ -73,14 +85,17 @@ class User
         return $this;
     }
 
-    public function getPwd(): ?string
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
-        return $this->pwd;
+        return $this->password;
     }
 
-    public function setPwd(string $pwd): static
+    public function setPassword(string $password): self
     {
-        $this->pwd = $pwd;
+        $this->password = $password;
 
         return $this;
     }
@@ -95,5 +110,28 @@ class User
         $this->role = $role ?? 'client';
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?string
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 }

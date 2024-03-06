@@ -4,7 +4,6 @@ namespace App\Document;
 use App\Document\User;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
-
 /**
  * @MongoDB\Document(collection="client")
  */
@@ -12,29 +11,10 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 class Client extends User
 {
-    #[MongoDB\Field(type: 'string')]
-    private ?string $id_device;
-    #[MongoDB\Field(type: 'string')]
-    private ?string $name_device;
     #[MongoDB\Field(type: 'collection')]
     private ?string $videos;
-
-    public function getIdDevice(): ?string
-    {
-        return $this->id_device;
-    }
-
-    public function setIdDevice(string $id_device): static
-    {
-        $this->id_device = $id_device;
-
-        return $this;
-    }
-
-    public function getNameDevice(): ?string
-    {
-        return $this->name_device;
-    }
+    #[MongoDB\Field(type: 'collection')]
+    private ?string $devices;
 
     public function setNameDevice(string $name_device): static
     {
@@ -47,15 +27,21 @@ class Client extends User
         return $this->videos;
     }
 
-    public function setVideos(array $videos): static
-    {
-        $this->videos = $videos;
-        return $this;
-    }
-
     public function addVideo(string $video): static
     {
         $this->videos[] = $video;
+        return $this;
+    }
+
+
+    public function getDevices(): ?array
+    {
+        return $this->devices;
+    }
+
+    public function addDevices(string $device): static
+    {
+        $this->devices = array_push($this->devices, $device);
         return $this;
     }
 }
