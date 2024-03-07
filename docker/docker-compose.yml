@@ -2,17 +2,17 @@ version: '3.8'
 services:
 
   database:
-    image: mongo:latest
-    container_name: mongodb
-    restart: always
+    image: mysql:latest
+    container_name: ${DB_HOST}
     ports:
       - ${DB_PORT}
     volumes:
-      - /var/lib/mongodb
+      - /var/lib/mysql
     environment:
-      MONGODB_ADMIN_USER: ${DB_NAME}
-      MONGODB_ADMIN_PASS: ${DB_PASSWORD}
-    command: mongod
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
   php-fpm:
     container_name: php-fpm
@@ -33,4 +33,4 @@ services:
     volumes:
       - ..:/var/www:rw
     depends_on:
-    - php-fpm
+      - php-fpm

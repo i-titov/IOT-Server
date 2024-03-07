@@ -3,7 +3,7 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
-sign_in:
-    path: /signin
-    controller: App\Controller\SecurityController::signIn
+login_device:
+    path: /api/device
+    controller: App\Controller\DeviceController::signIn
     methods: POST
